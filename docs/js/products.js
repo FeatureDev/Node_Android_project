@@ -303,19 +303,52 @@ function getStockText(stock) {
     return 'I lager';
 }
 
-function addToCart(productId) {
+async function addToCart(productId) {
+    // Fetch product details from API if not already loaded
+    if (allProducts.length === 0 && products.length === 0) {
+        try {
+            const response = await fetch(API_URL);
+            if (!response.ok) throw new Error('Failed to fetch products');
+            const productsData = await response.json();
+            allProducts = productsData;
+            products = productsData;
+        } catch (error) {
+            console.error('Error fetching products:', error);
+            showNotification('Kunde inte lagga till produkt');
+            return;
+        }
+    }
+    
+    // Find the product
+    const product = allProducts.find(p => p.id === productId) || products.find(p => p.id === productId);
+    
+    if (!product) {
+        console.error('Product not found:', productId);
+        showNotification('Produkt hittades inte');
+        return;
+    }
+    
     let cart = JSON.parse(localStorage.getItem('cart') || '[]');
     
     const existingItem = cart.find(item => item.id === productId);
     if (existingItem) {
         existingItem.quantity++;
     } else {
-        cart.push({ id: productId, quantity: 1 });
+        // Save complete product info
+        cart.push({
+            id: product.id,
+            name: product.name,
+            price: product.price,
+            image: product.image,
+            category: product.category,
+            quantity: 1
+        });
     }
     
     localStorage.setItem('cart', JSON.stringify(cart));
     updateCartCount();
     
+    console.log('✅ Added to cart:', product.name);
     showNotification('Produkt tillagd i varukorgen!');
 }
 
