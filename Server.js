@@ -114,7 +114,7 @@ app.get('/api/products/:id', (req, res) => {
 
 // Route for main page
 app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'docs', 'index.html'));
+    res.sendFile(path.join(__dirname, 'docs', 'index', 'index.html'));
 });
 
 // Start server
