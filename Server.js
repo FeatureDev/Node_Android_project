@@ -16,7 +16,6 @@ app.use((req, res, next) => {
 
 // Serve static files from docs directory
 app.use(express.static(path.join(__dirname, 'docs')));
-app.use('/picture', express.static(path.join(__dirname, 'picture')));
 app.use(express.json());
 
 // Mock product data - Fashion/Clothing items
