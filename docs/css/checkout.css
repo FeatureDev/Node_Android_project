@@ -803,8 +803,9 @@ footer {
 
 .order-item-image {
     width: 60px;
-    height: 60px;
-    object-fit: cover;
+    height: 120px;
+    object-fit: contain;
+    background: var(--bg-light);
     border-radius: 0.5rem;
     flex-shrink: 0;
 }
