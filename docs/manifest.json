@@ -2,7 +2,7 @@
   "name": "Mogges Store",
   "short_name": "Mogges Store",
   "description": "Din kompletta e-handelsplattform med produkter, varukorg och mer",
-  "start_url": "/index.html",
+  "start_url": "/index/index.html",
   "display": "standalone",
   "background_color": "#6366f1",
   "theme_color": "#6366f1",
