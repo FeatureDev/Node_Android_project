@@ -655,7 +655,7 @@ footer {
 
 /* Checkout Specific Styles */
 .checkout-section {
-    padding: 3rem 0;
+    padding: 1.5rem 0;
     background: var(--bg-light);
 }
 
@@ -693,9 +693,9 @@ footer {
 
 .qr-code-container {
     position: relative;
-    width: 320px;
-    height: 320px;
-    margin: 0 auto 2rem;
+    width: 220px;
+    height: 220px;
+    margin: 0 auto 1rem;
     background: var(--bg-light);
     border-radius: 0.5rem;
     display: flex;
@@ -802,8 +802,8 @@ footer {
 }
 
 .order-item-image {
-    width: 60px;
-    height: 120px;
+    width: 50px;
+    height: 80px;
     object-fit: contain;
     background: var(--bg-light);
     border-radius: 0.5rem;
