@@ -11,7 +11,10 @@ app.use((req, res, next) => {
     res.set('Cache-Control', 'no-store, no-cache, must-revalidate, private');
     res.set('Pragma', 'no-cache');
     res.set('Expires', '0');
-    res.set('Content-Type', 'text/html; charset=utf-8');
+    // Only set text/html for HTML files
+    if (req.path.endsWith('.html') || req.path === '/') {
+        res.set('Content-Type', 'text/html; charset=utf-8');
+    }
     next();
 });
 
