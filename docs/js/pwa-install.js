@@ -3,8 +3,8 @@ console.log('PWA install script loaded');
 
 // Clear all caches on load
 if ('caches' in window) {
-    caches.keys().then(function(names) {
-        for (let name of names) {
+    caches.keys().then((names) => {
+        for (const name of names) {
             caches.delete(name);
         }
     });
@@ -16,7 +16,7 @@ if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
         // Unregister old service workers first
         navigator.serviceWorker.getRegistrations().then((registrations) => {
-            for (let registration of registrations) {
+            for (const registration of registrations) {
                 registration.unregister();
             }
         }).then(() => {

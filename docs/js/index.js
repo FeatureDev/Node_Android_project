@@ -304,7 +304,7 @@ function getStockText(stock) {
 }
 
 function addToCart(productId) {
-    let cart = JSON.parse(localStorage.getItem('cart') || '[]');
+    const cart = JSON.parse(localStorage.getItem('cart') || '[]');
     
     const existingItem = cart.find(item => item.id === productId);
     if (existingItem) {
@@ -369,7 +369,7 @@ style.textContent = `
 document.head.appendChild(style);
 
 // ===== INITIALIZE ON PAGE LOAD =====
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', () => {
     // Detect which page we're on and load appropriate content
     const allProductsContainer = document.getElementById('all-products');
     const cartContainer = document.getElementById('cart-items');
@@ -399,7 +399,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     if (button && message) {
         let clickCount = 0;
-        button.addEventListener('click', function() {
+        button.addEventListener('click', () => {
             clickCount++;
             message.textContent = `Du har klickat ${clickCount} ${clickCount === 1 ? 'gång' : 'gånger'}!`;
             
