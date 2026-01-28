@@ -5,7 +5,6 @@ const API_URL = `${API_BASE_URL}/api/products`;
 // Global variables for products and cart
 let allProducts = [];
 let filteredProducts = [];
-const cart = JSON.parse(localStorage.getItem('cart') || '[]');
 let products = [];
 
 // ===== FEATURED PRODUCTS (Home Page) =====
