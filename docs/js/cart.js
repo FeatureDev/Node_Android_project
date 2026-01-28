@@ -1,13 +1,11 @@
 ﻿'use strict';
 
-console.log('Hello world');
-
-const API_URL = '/api/products';
+const API_URL = `${API_BASE_URL}/api/products`;
 
 // Global variables for products and cart
 let allProducts = [];
 let filteredProducts = [];
-let cart = [];
+const cart = JSON.parse(localStorage.getItem('cart') || '[]');
 let products = [];
 
 // ===== FEATURED PRODUCTS (Home Page) =====
@@ -150,54 +148,67 @@ function filterProducts() {
 // ===== CART FUNCTIONS =====
 async function loadCart() {
     try {
+        console.log('📦 Loading cart...');
+        console.log('📦 API URL:', API_URL);
+        
         const response = await fetch(API_URL);
         if (!response.ok) throw new Error('Failed to fetch products');
         
         products = await response.json();
-        cart = JSON.parse(localStorage.getItem('cart') || '[]');
+        console.log('✅ Products loaded:', products.length);
         
-        displayCart();
+        const storedCart = JSON.parse(localStorage.getItem('cart') || '[]');
+        console.log('🛒 Cart items from localStorage:', storedCart);
+        
+        displayCart(storedCart);
         updateCartCount();
     } catch (error) {
-        console.error('Error loading cart:', error);
+        console.error('❌ Error loading cart:', error);
+        // Show error but still try to display cart from localStorage
+        const storedCart = JSON.parse(localStorage.getItem('cart') || '[]');
+        if (storedCart.length > 0) {
+            displayCartWithoutProducts(storedCart);
+        }
     }
 }
 
-function displayCart() {
-    const container = document.getElementById('cart-items');
-    const summaryContainer = document.getElementById('cart-summary');
+function displayCart(cartData = null) {
+const container = document.getElementById('cart-items');
+const summaryContainer = document.getElementById('cart-summary');
     
-    if (!container) return;
+if (!container) return;
     
-    if (cart.length === 0) {
-        container.innerHTML = `
-            <div class="empty-cart">
-                <svg width="120" height="120" viewBox="0 0 24 24" fill="none" stroke="#cbd5e1" stroke-width="1">
-                    <circle cx="9" cy="21" r="1"/>
-                    <circle cx="20" cy="21" r="1"/>
-                    <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
-                </svg>
-                <h3>Din varukorg ar tom</h3>
-                <p>Lagg till nagra produkter for att fortsatta</p>
-                <a href="products.html" class="btn btn-primary">Handla Nu</a>
-            </div>
-        `;
-        if (summaryContainer) summaryContainer.style.display = 'none';
-        return;
-    }
+const currentCart = cartData || JSON.parse(localStorage.getItem('cart') || '[]');
     
-    if (summaryContainer) summaryContainer.style.display = 'block';
+if (currentCart.length === 0) {
+    container.innerHTML = `
+        <div class="empty-cart">
+            <svg width="120" height="120" viewBox="0 0 24 24" fill="none" stroke="#cbd5e1" stroke-width="1">
+                <circle cx="9" cy="21" r="1"/>
+                <circle cx="20" cy="21" r="1"/>
+                <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+            </svg>
+            <h3>Din varukorg är tom</h3>
+            <p>Lägg till några produkter för att fortsätta</p>
+            <a href="products.html" class="btn btn-primary">Handla Nu</a>
+        </div>
+    `;
+    if (summaryContainer) summaryContainer.style.display = 'none';
+    return;
+}
     
-    const cartItems = cart.map(cartItem => {
-        const product = products.find(p => p.id === cartItem.id);
-        if (!product) return null;
+if (summaryContainer) summaryContainer.style.display = 'block';
+    
+const cartItems = currentCart.map(cartItem => {
+    const product = products.find(p => p.id === cartItem.id);
+    if (!product) return null;
         
-        return {
-            ...product,
-            quantity: cartItem.quantity,
-            total: product.price * cartItem.quantity
-        };
-    }).filter(item => item !== null);
+    return {
+        ...product,
+        quantity: cartItem.quantity,
+        total: product.price * cartItem.quantity
+    };
+}).filter(item => item !== null);
     
     container.innerHTML = cartItems.map(item => `
         <div class="cart-item">
@@ -235,34 +246,59 @@ function updateSummary(cartItems) {
     if (totalEl) totalEl.textContent = `${total.toFixed(2)} kr`;
 }
 
+// Fallback function if products can't be loaded from API
+function displayCartWithoutProducts(cartData) {
+    const container = document.getElementById('cart-items');
+    const summaryContainer = document.getElementById('cart-summary');
+    
+    if (!container) return;
+    
+    container.innerHTML = `
+        <div class="cart-error">
+            <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2">
+                <circle cx="12" cy="12" r="10"/>
+                <line x1="12" y1="8" x2="12" y2="12"/>
+                <line x1="12" y1="16" x2="12.01" y2="16"/>
+            </svg>
+            <h3>Kan inte ladda produkter</h3>
+            <p>Servern är inte igång. Du har ${cartData.length} ${cartData.length === 1 ? 'produkt' : 'produkter'} i varukorgen.</p>
+            <p><strong>Starta servern:</strong> <code>npm start</code></p>
+            <a href="products.html" class="btn btn-secondary">Tillbaka till Produkter</a>
+        </div>
+    `;
+    if (summaryContainer) summaryContainer.style.display = 'none';
+}
+
 function updateQuantity(productId, newQuantity) {
     if (newQuantity <= 0) {
         removeFromCart(productId);
         return;
     }
     
-    const cartItem = cart.find(item => item.id === productId);
+    const currentCart = JSON.parse(localStorage.getItem('cart') || '[]');
+    const cartItem = currentCart.find(item => item.id === productId);
     const product = products.find(p => p.id === productId);
     
     if (newQuantity > product.stock) {
-        showNotification('Inte tillrackligt med lager!');
+        showNotification('Inte tillräckligt med lager!');
         return;
     }
     
     if (cartItem) {
         cartItem.quantity = newQuantity;
-        localStorage.setItem('cart', JSON.stringify(cart));
-        displayCart();
+        localStorage.setItem('cart', JSON.stringify(currentCart));
+        displayCart(currentCart);
         updateCartCount();
     }
 }
 
 function removeFromCart(productId) {
-    cart = cart.filter(item => item.id !== productId);
-    localStorage.setItem('cart', JSON.stringify(cart));
-    displayCart();
+    let currentCart = JSON.parse(localStorage.getItem('cart') || '[]');
+    currentCart = currentCart.filter(item => item.id !== productId);
+    localStorage.setItem('cart', JSON.stringify(currentCart));
+    displayCart(currentCart);
     updateCartCount();
-    showNotification('Produkt borttagen fran varukorgen');
+    showNotification('Produkt borttagen från varukorgen');
 }
 
 // ===== SHARED UTILITY FUNCTIONS =====
