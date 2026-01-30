@@ -75,6 +75,7 @@ function displayFeaturedProducts(products) {
 async function loadAllProducts() {
     try {
         const response = await fetch(API_URL);
+
         if (!response.ok) throw new Error('Failed to fetch products');
         
         allProducts = await response.json();
