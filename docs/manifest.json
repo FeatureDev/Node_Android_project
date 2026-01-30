@@ -2,14 +2,14 @@
   "name": "Mogges Store",
   "short_name": "Mogges Store",
   "description": "Din kompletta e-handelsplattform med produkter, varukorg och mer",
-  "start_url": "/",
+  "start_url": "/Node_Android_project/",
   "display": "standalone",
   "background_color": "#6366f1",
   "theme_color": "#6366f1",
   "orientation": "portrait-primary",
   "icons": [
     {
-      "src": "/picture/1.jpg",
+      "src": "/Node_Android_project/picture/1.jpg",
       "sizes": "512x512",
       "type": "image/jpeg",
       "purpose": "any maskable"
