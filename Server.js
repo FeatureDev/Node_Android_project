@@ -4,7 +4,7 @@ const express = require('express');
 const path = require('path');
 const { exec } = require('child_process');
 const sqlite3 = require('sqlite3').verbose();
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 const session = require('express-session');
 
 const app = express();

@@ -1,5 +1,5 @@
 const sqlite3 = require('sqlite3').verbose();
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 
 const db = new sqlite3.Database('moggesstore.db', (err) => {
     if (err) {
