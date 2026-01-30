@@ -5,14 +5,14 @@ const CONFIG = {
     LOCAL_API: 'http://localhost:3000',
     
     // Phone backend on same WiFi (replace with your phone's IP address)
-    PHONE_API: 'http://192.168.1.100:3000',
+    PHONE_API: 'http://194.47.37.121:3000',
     
     // Ngrok tunnel (replace with your ngrok URL)
     // Example: https://abc123.ngrok-free.app
     NGROK_API: 'https://YOUR-NGROK-URL.ngrok-free.app', // CHANGE THIS!
     
     // Choose mode: 'local', 'phone', or 'ngrok'
-    MODE: 'local'
+    MODE: 'phone'
 };
 
 // Get the active API URL based on mode

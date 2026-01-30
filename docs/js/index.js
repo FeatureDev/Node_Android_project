@@ -2,7 +2,8 @@
 
 console.log('Hello world');
 
-const API_URL = '/api/products';
+// Import API configuration
+const API_URL = typeof API_BASE_URL !== 'undefined' ? API_BASE_URL + '/api/products' : '/api/products';
 
 // Global variables for products and cart
 let allProducts = [];
