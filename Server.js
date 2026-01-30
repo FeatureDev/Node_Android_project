@@ -3,21 +3,15 @@
 const express = require('express');
 const path = require('path');
 const { exec } = require('child_process');
-const sqlite3 = require('sqlite3').verbose();
+const database = require('./database');
 const bcrypt = require('bcryptjs');
 const session = require('express-session');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Database connection
-const db = new sqlite3.Database('moggesstore.db', (err) => {
-    if (err) {
-        console.error('? Error connecting to database:', err);
-        process.exit(1);
-    }
-    console.log('? Connected to database');
-});
+// Database will be initialized at startup
+let dbReady = false;
 
 // Session middleware
 app.use(session({
@@ -65,28 +59,28 @@ app.use(express.static(path.join(__dirname, 'docs')));
 
 // API Routes
 app.get('/api/products', (req, res) => {
-    db.all('SELECT Id as id, Name as name, Description as description, Price as price, Category as category, Stock as stock, Image as image FROM Products', [], (err, rows) => {
-        if (err) {
-            console.error('? Error fetching products:', err);
-            return res.status(500).json({ error: 'Failed to fetch products' });
-        }
+    try {
+        const rows = database.all('SELECT Id as id, Name as name, Description as description, Price as price, Category as category, Stock as stock, Image as image FROM Products');
         res.json(rows);
-    });
+    } catch (err) {
+        console.error('? Error fetching products:', err);
+        res.status(500).json({ error: 'Failed to fetch products' });
+    }
 });
 
 app.get('/api/products/:id', (req, res) => {
     const id = parseInt(req.params.id);
-    db.get('SELECT Id as id, Name as name, Description as description, Price as price, Category as category, Stock as stock, Image as image FROM Products WHERE Id = ?', [id], (err, row) => {
-        if (err) {
-            console.error('? Error fetching product:', err);
-            return res.status(500).json({ error: 'Failed to fetch product' });
-        }
+    try {
+        const row = database.get('SELECT Id as id, Name as name, Description as description, Price as price, Category as category, Stock as stock, Image as image FROM Products WHERE Id = ?', [id]);
         if (row) {
             res.json(row);
         } else {
             res.status(404).json({ error: 'Product not found' });
         }
-    });
+    } catch (err) {
+        console.error('? Error fetching product:', err);
+        res.status(500).json({ error: 'Failed to fetch product' });
+    }
 });
 
 // Authentication middleware
@@ -105,18 +99,15 @@ function requireAdmin(req, res, next) {
 }
 
 // Auth API Routes
-app.post('/api/login', (req, res) => {
+app.post('/api/login', async (req, res) => {
     const { email, password } = req.body;
     
     if (!email || !password) {
         return res.status(400).json({ error: 'Email and password required' });
     }
     
-    db.get('SELECT * FROM Users WHERE Email = ?', [email], async (err, user) => {
-        if (err) {
-            console.error('? Error fetching user:', err);
-            return res.status(500).json({ error: 'Server error' });
-        }
+    try {
+        const user = database.get('SELECT * FROM Users WHERE Email = ?', [email]);
         
         if (!user) {
             return res.status(401).json({ error: 'Invalid credentials' });
@@ -143,7 +134,10 @@ app.post('/api/login', (req, res) => {
                 role: user.Role
             }
         });
-    });
+    } catch (err) {
+        console.error('? Error during login:', err);
+        res.status(500).json({ error: 'Server error' });
+    }
 });
 
 app.post('/api/logout', (req, res) => {
@@ -174,42 +168,42 @@ app.post('/api/products', requireAdmin, (req, res) => {
         return res.status(400).json({ error: 'Name and price are required' });
     }
     
-    db.run(`
-        INSERT INTO Products (Name, Description, Price, Category, Stock, Image)
-        VALUES (?, ?, ?, ?, ?, ?)
-    `, [name, description, price, category, stock || 0, image || 'picture/1.jpg'], function(err) {
-        if (err) {
-            console.error('? Error creating product:', err);
-            return res.status(500).json({ error: 'Failed to create product' });
-        }
+    try {
+        const result = database.run(`
+            INSERT INTO Products (Name, Description, Price, Category, Stock, Image)
+            VALUES (?, ?, ?, ?, ?, ?)
+        `, [name, description, price, category, stock || 0, image || 'picture/1.jpg']);
         
         res.json({
             message: 'Product created',
-            id: this.lastID
+            id: result.lastID
         });
-    });
+    } catch (err) {
+        console.error('? Error creating product:', err);
+        res.status(500).json({ error: 'Failed to create product' });
+    }
 });
 
 app.put('/api/products/:id', requireAdmin, (req, res) => {
     const id = parseInt(req.params.id);
     const { name, description, price, category, stock, image } = req.body;
     
-    db.run(`
-        UPDATE Products 
-        SET Name = ?, Description = ?, Price = ?, Category = ?, Stock = ?, Image = ?
-        WHERE Id = ?
-    `, [name, description, price, category, stock, image, id], function(err) {
-        if (err) {
-            console.error('? Error updating product:', err);
-            return res.status(500).json({ error: 'Failed to update product' });
-        }
+    try {
+        const result = database.run(`
+            UPDATE Products 
+            SET Name = ?, Description = ?, Price = ?, Category = ?, Stock = ?, Image = ?
+            WHERE Id = ?
+        `, [name, description, price, category, stock, image, id]);
         
-        if (this.changes === 0) {
+        if (result.changes === 0) {
             return res.status(404).json({ error: 'Product not found' });
         }
         
         res.json({ message: 'Product updated' });
-    });
+    } catch (err) {
+        console.error('? Error updating product:', err);
+        res.status(500).json({ error: 'Failed to update product' });
+    }
 });
 
 app.delete('/api/products/:id', requireAdmin, (req, res) => {
