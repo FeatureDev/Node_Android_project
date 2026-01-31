@@ -1,6 +1,0 @@
-﻿<Project Sdk="Microsoft.VisualStudio.JavaScript.Sdk/1.0.3864779">
-  <ItemGroup>
-    <None Include=".vs\launch.vs.json" />
-    <None Include=".vs\tasks.vs.json" />
-  </ItemGroup>
-</Project>

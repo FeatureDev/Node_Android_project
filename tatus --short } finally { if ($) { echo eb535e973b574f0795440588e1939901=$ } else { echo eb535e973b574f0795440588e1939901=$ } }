@@ -1,5 +1,0 @@
-[33me0b4096[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m)[m Remove unused cart variable declaration
-[33m27ce944[m Fix cart.js - Use API_BASE_URL and improve cart loading with fallback
-[33mf5a467c[m Fix Swedish character encoding in about.html
-[33m0c4420e[m Complete About page with content and styling
-[33me72a211[m Restructure for GitHub Pages and Android deployment

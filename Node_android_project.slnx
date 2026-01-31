@@ -1,6 +1,0 @@
-<Solution>
-  <Project Path="Node_android_project.esproj">
-    <Build />
-    <Deploy />
-  </Project>
-</Solution>
