@@ -1,3 +1,5 @@
+import { API_BASE_URL } from './config.js';
+
 console.log('?? Checkout page loaded');
 
 const API_URL = `${API_BASE_URL}/api/products`;

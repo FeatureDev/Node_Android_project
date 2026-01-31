@@ -1,5 +1,7 @@
 ﻿'use strict';
 
+import { API_BASE_URL } from './config.js';
+
 const API_URL = `${API_BASE_URL}/api/products`;
 
 // Global variables for products and cart

@@ -1,6 +1,6 @@
 // API Configuration
 // Change this to your ngrok URL when exposing backend to internet
-const CONFIG = {
+export const CONFIG = {
     // Local development (when running npm start on PC)
     LOCAL_API: 'http://localhost:3000',
     
@@ -28,7 +28,7 @@ function getApiUrl() {
     }
 }
 
-const API_BASE_URL = getApiUrl();
+export const API_BASE_URL = getApiUrl();
 
 console.log('?? API Configuration:', {
     mode: CONFIG.MODE.toUpperCase(),

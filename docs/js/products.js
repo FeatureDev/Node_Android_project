@@ -1,9 +1,11 @@
 ﻿'use strict';
 
+import { API_BASE_URL } from './config.js';
+
 console.log('Hello world');
 
 // Import API configuration
-const API_URL = typeof API_BASE_URL !== 'undefined' ? API_BASE_URL + '/api/products' : '/api/products';
+const API_URL = API_BASE_URL + '/api/products';
 
 // Global variables for products and cart
 let allProducts = [];

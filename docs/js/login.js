@@ -1,7 +1,9 @@
+import { API_BASE_URL } from './config.js';
+
 console.log('?? Login page loaded');
 
 // Use API_BASE_URL from config.js
-const API_URL = typeof API_BASE_URL !== 'undefined' ? API_BASE_URL : '';
+const API_URL = API_BASE_URL;
 
 const loginForm = document.getElementById('login-form');
 const emailInput = document.getElementById('email');
