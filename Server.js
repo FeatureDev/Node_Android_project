@@ -2,10 +2,14 @@
 
 import express from 'express';
 import path from 'path';
+import { fileURLToPath } from 'url';
 import { exec } from 'child_process';
 import * as database from './database.js';
 import bcrypt from 'bcryptjs';
 import session from 'express-session';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const app = express();
 const PORT = process.env.PORT || 3000;
