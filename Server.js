@@ -1,5 +1,6 @@
 'use strict';
 
+import 'dotenv/config';
 import express from 'express';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -7,6 +8,7 @@ import { exec } from 'child_process';
 import * as database from './database.js';
 import bcrypt from 'bcryptjs';
 import session from 'express-session';
+import crypto from 'crypto';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -14,12 +16,15 @@ const __dirname = path.dirname(__filename);
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+// Generate a random session secret if not provided
+const SESSION_SECRET = process.env.SESSION_SECRET || crypto.randomBytes(32).toString('hex');
+
 // Database will be initialized at startup
 let dbReady = false;
 
 // Session middleware
 app.use(session({
-    secret: 'mogges-store-secret-key-change-in-production',
+    secret: SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
     cookie: {
