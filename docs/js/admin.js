@@ -194,11 +194,11 @@ try {
 
 // Load products
 async function loadProducts() {
-try {
-    const response = await fetch(`${API_URL}/api/products`, {
-        credentials: 'include'
-    });
-    if (!response.ok) throw new Error('Failed to fetch products');
+    try {
+        const response = await fetch(`${API_URL}/api/products`, {
+            credentials: 'include'
+        });
+        if (!response.ok) throw new Error('Failed to fetch products');
         
         products = await response.json();
         displayProducts();
@@ -307,14 +307,15 @@ window.deleteProduct = async function(id) {
             credentials: 'include'
         });
         
+        const data = await response.json();
+        
         if (!response.ok) {
-            const error = await response.json();
-            throw new Error(error.error);
+            throw new Error(data.error || 'Failed to delete product');
         }
         
         console.log('? Product deleted');
         alert('Produkt borttagen!');
-        loadProducts();
+        await loadProducts();
     } catch (error) {
         console.error('Error deleting product:', error);
         alert('Kunde inte ta bort produkt: ' + error.message);
