@@ -5,7 +5,7 @@ export const CONFIG = {
     LOCAL_API: 'http://localhost:3000',
     
     // Phone backend on same WiFi (replace with your phone's IP address)
-    PHONE_API: 'http://194.47.37.121:3000',
+    PHONE_API: 'http://194.47.40.60:3000',
     
     // Ngrok tunnel (replace with your ngrok URL)
     // Example: https://abc123.ngrok-free.app
@@ -15,7 +15,7 @@ export const CONFIG = {
     PRODUCTION_API: 'https://api.mogges-store.se',
     
     // Choose mode: 'local', 'phone', 'ngrok', or 'production'
-    MODE: 'local'
+    MODE: 'phone'
 };
 
 // Get the active API URL based on mode
