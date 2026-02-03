@@ -1,0 +1,7 @@
+tunnel: 848f9056-284e-4755-b3eb-00afaea705b3
+credentials-file: C:\Users\morga\.cloudflared\848f9056-284e-4755-b3eb-00afaea705b3.json
+
+ingress:
+  - hostname: api.mogges-store.se
+    service: http://localhost:3000
+  - service: http_status:404

@@ -15,7 +15,7 @@ export const CONFIG = {
     PRODUCTION_API: 'https://api.mogges-store.se',
     
     // Choose mode: 'local', 'phone', 'ngrok', or 'production'
-    MODE: 'phone'
+    MODE: 'production'
 };
 
 // Get the active API URL based on mode
