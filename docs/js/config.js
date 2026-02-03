@@ -13,7 +13,7 @@ switch (MODE) {
 
     case 'production':
         // Cloudflare Workers (LIVE)
-        API_BASE_URL = 'https://mogges-store-api.morganlindbom.workers.dev';
+        API_BASE_URL = 'https://api.mogges-store.se';
         break;
 
     default:

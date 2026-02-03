@@ -37,7 +37,7 @@ app.get('/api', (c) => {
 app.get('/api/products', async (c) => {
 	const { results } = await c.env.DB
 		.prepare(
-			'SELECT Id, Name, Description, Price, Category, Stock, Image FROM Products'
+			'SELECT Id as id, Name as name, Description as description, Price as price, Category as category, Stock as stock, Image as image FROM Products'
 		)
 		.all();
 

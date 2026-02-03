@@ -34,6 +34,14 @@
 			"database_name": "mogges-store-db",
 			"database_id": "0be175bf-ba6e-4194-844b-d53cdcbf77f1"
 		}
+	],
+
+	// Custom domains
+	"routes": [
+		{
+			"pattern": "api.mogges-store.se",
+			"custom_domain": true
+		}
 	]
 
 	// Optional: Smart placement (can be enabled later)
