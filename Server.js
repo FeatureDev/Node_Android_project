@@ -29,6 +29,8 @@ app.use(session({
     saveUninitialized: false,
     cookie: {
         secure: false, // Set to true in production with HTTPS
+        httpOnly: true,
+        sameSite: 'lax', // Changed from 'strict' to 'lax' for cross-site requests
         maxAge: 24 * 60 * 60 * 1000 // 24 hours
     }
 }));
@@ -46,12 +48,24 @@ app.use((req, res, next) => {
 });
 
 // Body parser middleware
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(express.json({ charset: 'utf-8' }));
+app.use(express.urlencoded({ extended: true, charset: 'utf-8' }));
 
 // CORS configuration for cross-origin requests (GitHub Pages -> Phone backend)
 app.use((req, res, next) => {
-    res.header('Access-Control-Allow-Origin', '*'); // Allow all origins (or specify GitHub Pages URL)
+    const origin = req.headers.origin;
+    // Allow specific origins or localhost for development
+    const allowedOrigins = [
+        'http://localhost:8080',
+        'http://127.0.0.1:8080',
+        'https://mogges-store.se',
+        'https://www.mogges-store.se'
+    ];
+    
+    if (allowedOrigins.includes(origin) || !origin) {
+        res.header('Access-Control-Allow-Origin', origin || '*');
+    }
+    
     res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
     res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization, ngrok-skip-browser-warning');
     res.header('Access-Control-Allow-Credentials', 'true');
@@ -65,6 +79,30 @@ app.use((req, res, next) => {
 
 // Serve static files from docs directory
 app.use(express.static(path.join(__dirname, 'docs')));
+
+// API endpoint to get available images
+import fs from 'fs/promises';
+
+app.get('/api/images', async (req, res) => {
+    try {
+        const pictureDir = path.join(__dirname, 'docs', 'picture');
+        
+        const files = await fs.readdir(pictureDir);
+        
+        // Filter image files
+        const imageFiles = files.filter(file => 
+            /\.(jpg|jpeg|png|gif|webp|svg)$/i.test(file)
+        ).map(file => ({
+            name: file,
+            path: `picture/${file}`
+        }));
+        
+        res.json(imageFiles);
+    } catch (err) {
+        console.error('Error loading images:', err);
+        res.status(500).json({ error: 'Failed to load images' });
+    }
+});
 
 // API Routes
 app.get('/api/products', (req, res) => {

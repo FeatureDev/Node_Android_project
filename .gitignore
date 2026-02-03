@@ -40,8 +40,8 @@ logs/
 # Package lock (optional - remove this line if you want to commit it)
 package-lock.json
 
-# Ngrok
-ngrok
-ngrok.exe
-ngrok.yml
+# Cloudflare Tunnel
+*.json
+cloudflared
+cloudflared.exe
 
