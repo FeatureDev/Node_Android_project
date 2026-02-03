@@ -327,22 +327,23 @@ function getStockText(stock) {
 }
 
 async function addToCart(productId) {
-// Fetch product details from API if not already loaded
-if (allProducts.length === 0 && products.length === 0) {
-    try {
-        const response = await fetch(API_URL, {
-            headers: {
-                'ngrok-skip-browser-warning': 'true'
-            }
-        });
-        if (!response.ok) throw new Error('Failed to fetch products');
-        const productsData = await response.json();
-        allProducts = productsData;
-        products = productsData;
-    } catch (error) {
-        console.error('Error fetching products:', error);
-        showNotification('Kunde inte lagga till produkt');
-        return;
+    // Fetch product details from API if not already loaded
+    if (allProducts.length === 0 && products.length === 0) {
+        try {
+            const response = await fetch(API_URL, {
+                headers: {
+                    'ngrok-skip-browser-warning': 'true'
+                }
+            });
+            if (!response.ok) throw new Error('Failed to fetch products');
+            const productsData = await response.json();
+            allProducts = productsData;
+            products = productsData;
+        } catch (error) {
+            console.error('Error fetching products:', error);
+            showNotification('Kunde inte lagga till produkt');
+            return;
+        }
     }
     
     // Find the product
@@ -364,16 +365,6 @@ if (allProducts.length === 0 && products.length === 0) {
     }
 }
 
-function updateCartCount() {
-    const cart = JSON.parse(localStorage.getItem('cart') || '[]');
-    const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
-    
-    const countElements = document.querySelectorAll('.cart-count');
-    countElements.forEach(el => {
-        el.textContent = totalItems;
-        el.style.display = totalItems > 0 ? 'flex' : 'none';
-    });
-}
 
 function showNotification(message) {
     const notification = document.createElement('div');
