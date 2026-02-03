@@ -1,6 +1,7 @@
 ﻿'use strict';
 
 import { API_BASE_URL } from './config.js';
+import { updateCartCount as updateCartCountCommon } from './cart-common.js';
 
 const API_URL = `${API_BASE_URL}/api/products`;
 
@@ -368,16 +369,10 @@ function addToCart(productId) {
     showNotification('Produkt tillagd i varukorgen!');
 }
 
-function updateCartCount() {
-    const cart = JSON.parse(localStorage.getItem('cart') || '[]');
-    const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
-    
-    const countElements = document.querySelectorAll('.cart-count');
-    countElements.forEach(el => {
-        el.textContent = totalItems;
-        el.style.display = totalItems > 0 ? 'flex' : 'none';
-    });
-}
+
+// Use updateCartCount from cart-common.js
+const updateCartCount = updateCartCountCommon;
+
 
 function showNotification(message) {
     const notification = document.createElement('div');
@@ -468,3 +463,7 @@ document.addEventListener('DOMContentLoaded', () => {
     
     console.log('Sidan är laddad och redo!');
 });
+
+// Make cart functions globally accessible for onclick handlers
+window.updateQuantity = updateQuantity;
+window.removeFromCart = removeFromCart;
