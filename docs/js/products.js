@@ -327,17 +327,19 @@ function getStockText(stock) {
 }
 
 async function addToCart(productId) {
-    // Fetch product details from API if not already loaded
-    if (allProducts.length === 0 && products.length === 0) {
-        try {
-            const response = await fetch(API_URL, {
-                headers: {
-                    'ngrok-skip-browser-warning': 'true'
-                }
-            });
-            if (!response.ok) throw new Error('Failed to fetch products');
-            const productsData = await response.json();
-            allProducts = productsData;
+console.log('🛒 addToCart called with ID:', productId);
+    
+// Fetch product details from API if not already loaded
+if (allProducts.length === 0 && products.length === 0) {
+    try {
+        const response = await fetch(API_URL, {
+            headers: {
+                'ngrok-skip-browser-warning': 'true'
+            }
+        });
+        if (!response.ok) throw new Error('Failed to fetch products');
+        const productsData = await response.json();
+        allProducts = productsData;
             products = productsData;
         } catch (error) {
             console.error('Error fetching products:', error);
@@ -452,5 +454,9 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
     
+    
     console.log('Sidan är laddad och redo!');
 });
+
+// Make addToCart globally accessible for onclick handlers
+window.addToCart = addToCart;

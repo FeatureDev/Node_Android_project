@@ -429,3 +429,6 @@ document.addEventListener('DOMContentLoaded', () => {
     
     console.log('Sidan är laddad och redo!');
 });
+
+// Make addToCart globally accessible for onclick handlers
+window.addToCart = addToCart;
