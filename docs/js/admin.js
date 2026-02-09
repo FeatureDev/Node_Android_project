@@ -338,10 +338,11 @@ window.deleteProduct = async function(id) {
     }
     
     try {
+        const token = localStorage.getItem('token');
         const response = await fetch(`${API_URL}/api/products/${id}`, {
             method: 'DELETE',
             headers: {
-                'Authorization': `Bearer ${localStorage.getItem('token')}`
+                'Authorization': `Bearer ${token}`
             }
         });
         
@@ -396,11 +397,12 @@ document.getElementById('product-form').addEventListener('submit', async (e) => 
         const method = editingProductId ? 'PUT' : 'POST';
         
         
+        const token = localStorage.getItem('token');
         const response = await fetch(url, {
             method,
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${localStorage.getItem('token')}`
+                'Authorization': `Bearer ${token}`
             },
             body: JSON.stringify(formData)
         });
